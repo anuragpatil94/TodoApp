@@ -1,67 +1,30 @@
-const mongoose = require('mongoose');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+var { mongoose } = require('./db/mongoose');
+var { User } = require('./models/user')
+var { Todo } = require('./models/todo')
 
-var Todo = mongoose.model('Todo', {
-    text: {
-        type: String,
-        //Validators
-        required: true,  //isRequired
-        minlength: 1,    //minimum length of text field should be 1
-        trim: true        //removes white spaces from left and right of string
-    },
-    completed: {
-        type: Boolean,
-        default: false
+var app = express();
 
-    },
-    completedAt: {
-        type: Number,
-        default: null
-    }
+app.use(bodyParser.json());
+
+app.post('/todo', (req, res) => {
+    var todo = new Todo({
+        text: req.body.text,
+        completed: req.body.completed,
+        completedAt: req.body.completedAt
+    })
+    todo.save().then((doc) => {
+        res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
+    });
+    ;
 });
 
-// var newTodo = new Todo({
-//     text: 'Cook Dinner'
-// });
-// newTodo.save().then((doc) => {
-//     console.log('Saved Todo: ', doc);
-// }, (err) => {
-//     console.log(err);
-// });
-
-// var newTodo2 = new Todo({
-//     text: '  Edit this Video Again ',
-//     completed: true,
-//     completedAt: 123
-// });
-// newTodo2.save().then((doc) => {
-//     console.log('Saved Todo: ', doc);
-// }, (err) => {
-//     console.log(err);
-// });
-
-//User
-//email
-
-var User = mongoose.model('User', {
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 1
-    }
+app.listen(3000, () => {
+    console.log('Started');
 });
 
-var newUser = new User({
-    email:'a@gmail.com' //not completed
-})
 
-newUser.save().then((result) => {
-    console.log('User Added: \n', result);
-
-}, (e) => {
-    console.log(e);
-
-});
