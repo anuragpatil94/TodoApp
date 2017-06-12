@@ -7,7 +7,6 @@ var id = '593d7d24f8c29a51dc91e71c';
 
 if (!ObjectID.isValid(id)) {
     console.log('ID not Valid');
-
 }
 // Todo.find({
 //     _id: id
