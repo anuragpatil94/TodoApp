@@ -58,8 +58,7 @@ app.delete('/todo/:id', (req, res) => {
         if (!todo) {
             return res.status(404).send("No Todo with the ID");
         }
-        console.log({ todo })
-        res.status(200).send(todo);  //sending as todo object
+        res.status(200).send({ todo: todo });  //sending as todo object
     }).catch((e) => {
         res.status(400).send(e);
     });
