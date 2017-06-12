@@ -71,7 +71,7 @@ app.patch('/todo/:id', (req, res) => {
 
     if (!ObjectID.isValid(id)) {
         console.log('1');
-        
+
         return res.status(404).send();
     }
 
