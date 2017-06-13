@@ -72,8 +72,6 @@ app.patch('/todo/:id', (req, res) => {
     var body = _.pick(req.body, ['text', 'completed']);
 
     if (!ObjectID.isValid(id)) {
-        console.log('1');
-
         return res.status(404).send();
     }
 
@@ -86,14 +84,28 @@ app.patch('/todo/:id', (req, res) => {
 
     Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
         if (!todo) {
-            console.log('2');
             return res.status(404).send();
         }
         res.send({ todo });
     }).catch((e) => {
-        console.log('3');
         res.status(400).send();
     })
+});
+
+app.post('/user', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);  //what properties to get from the body
+    var user = new User(body);
+
+
+
+    user.save().then(() => {
+        return user.generateAuthToken();
+        //res.send(newUser);
+    }).then((token) => {
+        res.header('x-auth', token).send(user);
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
 });
 
 app.listen(port, () => {
