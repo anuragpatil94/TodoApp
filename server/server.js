@@ -97,8 +97,6 @@ app.post('/user', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);  //what properties to get from the body
     var user = new User(body);
 
-
-
     user.save().then(() => {
         return user.generateAuthToken();
         //res.send(newUser);
@@ -109,6 +107,8 @@ app.post('/user', (req, res) => {
     });
 });
 
+//authenticate is user to verify that the user is associated with token, 
+// i.e. a private route for each user
 app.get('/user/me', authenticate, (req, res) => {
     res.send(req.user)
 });
